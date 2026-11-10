@@ -1,0 +1,25 @@
+# Whitelist: в репозиторий попадает только то, что явно разрешено ниже.
+# Дампы (содержат пароль Wi-Fi), чужие прошивки, DLL и даташиты — никогда.
+/*
+!/.gitignore
+!/README.md
+!/LICENSE
+!/docs/
+!/tools/
+!/fw/
+!/re/
+
+/fw/**/build/
+/tools/__pycache__/
+**/__pycache__/
+*.pyc
+
+/re/*
+!/re/NOTES.md
+!/re/dis.py
+!/re/scan.py
+!/re/xref.py
+!/re/thead/
+/re/thead/*
+!/re/thead/strs.py
+!/re/thead/x86.py
