@@ -169,6 +169,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--port", default=PORT_DEFAULT, help="COM-порт программатора (или переменная TXW_PORT)")
     ap.add_argument("--algo", default=ALGO_DEFAULT)
+    ap.add_argument("--hck", type=int, default=7, help="GPIO C3 для HCK (синяя плата: 5)")
+    ap.add_argument("--hda", type=int, default=5, help="GPIO C3 для HDA (синяя плата: 7)")
+    ap.add_argument("--wdt-off", action="store_true", help="остановить сторожевой таймер родной прошивки")
     ap.add_argument("-v", action="store_true")
     sub = ap.add_subparsers(dest="op", required=True)
     sub.add_parser("id")
@@ -190,10 +193,16 @@ def main():
     if a.op == "write" and not a.yes:
         sys.exit("запись стирает флеш камеры; добавьте --yes")
 
-    pr = Prog(a.port, verbose=a.v)
+    pr = Prog(a.port, hck=a.hck, hda=a.hda, verbose=a.v)
     print(f"HID=0x{pr.hid():08x}")
     if not pr.debug():
         sys.exit("не удалось остановить CPU (режим отладки)")
+    if a.wdt_off:
+        # WDT TXW81x: CON=0x40015000, KEY=0x40015004; в SDK остановка = KEY 0xAAAA, затем 0xDDDD
+        print("WDT до:  ", pr.cmd("!mrd 0x40015000 2", "4001"))
+        pr.cmd("!mwr 0x40015004 0xaaaa", "[j] [")
+        pr.cmd("!mwr 0x40015004 0xdddd", "[j] [")
+        print("WDT после:", pr.cmd("!mrd 0x40015000 2", "4001"))
     syms = load_algo(pr, a.algo)
     r, s = pr.call(syms["flashInit"], timeout=3000)
     print(f"flashInit -> 0x{r:08x}  ({s})")
