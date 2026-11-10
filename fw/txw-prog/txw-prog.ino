@@ -9,7 +9,7 @@
 // Команды с ПК (строка, начинается с '!'):
 //   !baud 921600   — сменить скорость UART
 //   !auto          — автопоиск скорости (115200/921600/1500000/2000000/460800)
-//   !rx 20|21      — какую ногу слушать
+//   !rx <gpio>     — какую ногу слушать (любая, кроме 18/19; напр. 6 или 20)
 //   !info          — текущая скорость и счётчики
 // Всё остальное уходит в UART как есть.
 
@@ -193,8 +193,9 @@ static void handleCmd(String c) {
     else Serial.println("[txw-prog] ошибка: !baud <скорость>");
   } else if (c.startsWith("!rx")) {
     int p = c.substring(3).toInt();
-    if (p == 20 || p == 21) { PIN_RX = p; openUart(baud); Serial.printf("[txw-prog] rx=GPIO%d\n", p); }
-    else Serial.println("[txw-prog] ошибка: !rx 20|21");
+    // любая GPIO, кроме USB (18/19)
+    if (p >= 0 && p <= 21 && p != 18 && p != 19) { PIN_RX = p; openUart(baud); Serial.printf("[txw-prog] rx=GPIO%d\n", p); }
+    else Serial.println("[txw-prog] ошибка: !rx <GPIO 0..21, кроме 18/19>");
   } else if (c.startsWith("!j") || c.startsWith("!h") || c.startsWith("!rd") || c.startsWith("!rst") || c.startsWith("!dbg") || c.startsWith("!csr") || c.startsWith("!reg") || c.startsWith("!mrd") || c.startsWith("!x") || c.startsWith("!mwr") || c.startsWith("!go") || c.startsWith("!csrrun") || c.startsWith("!hcr") || c.startsWith("!wblk") || c.startsWith("!rblk") || c.startsWith("!call") || c.startsWith("!log")) {
     jcmd(c);
   } else if (c == "!auto") {
@@ -204,7 +205,7 @@ static void handleCmd(String c) {
   } else if (c == "!info") {
     Serial.printf("[txw-prog] pin=GPIO%d baud=%u rx=%u\n", PIN_RX, baud, rxBytes);
   } else {
-    Serial.println("[txw-prog] команды: !rx 20|21, !baud N, !auto, !info");
+    Serial.println("[txw-prog] команды: !rx <gpio>, !baud N, !auto, !info");
   }
 }
 

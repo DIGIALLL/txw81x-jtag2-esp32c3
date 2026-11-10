@@ -71,7 +71,7 @@ python tools/txwprog.py write OpenTXW81X_x.y.z.bin --yes      # стирание
 
 `!jpins <hck> <hda> <rst>` · `!jinit` · `!hid` · `!jbrute [мс]` · `!jprobe` · `!dbg` · `!csr` ·
 `!regr/!regw` · `!mrd <addr> [n]` · `!mwr` · `!go` · `!call` · `!wblk/!rblk` · `!wblkf/!rblkf` ·
-`!jspeed` · `!log 0|1` · `!baud` · `!auto` · `!rx 20|21`
+`!jspeed` · `!log 0|1` · `!baud` · `!auto` · `!rx <gpio>`
 
 После открытия порта C3 перезагружается, поэтому каждый раз сначала нужны `!jpins 7 5 3` и `!jinit`.
 
@@ -87,7 +87,7 @@ python tools/txwprog.py write OpenTXW81X_x.y.z.bin --yes      # стирание
 ## Статус
 
 - [x] Чёрная `STD-X5-817-V02`: дамп, прошивка OpenTXW81X, RTSP, Home Assistant.
-- [ ] Синяя круглая `IOT_V1.2 D250609` (SP0828): пады PA9/PA10/DP, не проверена.
+- [ ] Синяя круглая `IOT_V1.2 D250609` (SP0828): пады PA9→GPIO7, PA10→GPIO5, DP→GPIO6, не проверена.
 
 ## Благодарности
 
