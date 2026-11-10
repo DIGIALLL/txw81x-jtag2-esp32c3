@@ -165,7 +165,7 @@ static void jcmd(String c) {
                                int w = Serial.write((const uint8_t*)ob + o, L - o); o += w; if (w <= 0) delay(1); }
                              }
   else if (k == "!jnop")   { nopLoops = num(a[1]); Serial.printf("[j] nop=%u%c", nopLoops, 10); }
-  else if (k == "!jinit")  { begin(); lineReset(); Serial.println("[j] init: HCK=GPIO5 HDA=GPIO6 RST=GPIO7, линия сброшена"); }
+  else if (k == "!jinit")  { begin(); lineReset(); Serial.printf("[j] init: HCK=GPIO%d HDA=GPIO%d RST=GPIO%d, линия сброшена\n", PIN_HCK, PIN_HDA, PIN_RST); }
   else if (k == "!jrel")   { release(); Serial.println("[j] линии отпущены"); }
   else if (k == "!jreset") { lineReset(n > 1 ? num(a[1]) : 80); Serial.println("[j] line reset"); }
   else if (k == "!jspeed") { halfUs = num(a[1]); Serial.printf("[j] halfUs=%u\n", halfUs); }
